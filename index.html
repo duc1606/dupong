@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Dupong-Adventskalender</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-attachment: fixed;
+        }
+        .calendar-container {
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .door {
+            width: 100%;
+            height: 80px;
+            background-color: #c41e3a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .door.locked {
+            background-color: #808080;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .door:not(.locked):hover {
+            transform: scale(1.05);
+        }
+        .door-day {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            background: rgba(0,0,0,0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .modal-image {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4 text-white">Adventskalender</h1>
+            </div>
+        </div>
+        <div class="row" id="calendar-container"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="doorModal" tabindex="-1" aria-labelledby="doorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="doorModalLabel">Adventskalender Türchen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modal-image" src="" alt="Adventskalender Bild" class="modal-image mb-3">
+                    <p id="modal-text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Daten für den Adventskalender
+          const adventData = [
+      { day: 1, image: "1.png", text: "Weihnachten erinnert mich an die Zeit, in der wir uns kennengelernt haben. Ich erinner mich an unser erstes Date auf dem Weihnachtsmarkt. Du hattest deine grüne Jacke an mit deinen New Balance Schuhen. Damals noch mit hellbraunen Haaren. Erinnerst du dich noch, was ich an hatte?" },
+      { day: 2, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 3, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 4, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 5, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 6, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 7, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 8, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 9, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 10, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 11, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 12, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 13, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 14, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 15, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 16, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 17, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 18, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 19, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 20, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 21, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 22, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 23, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" },
+      { day: 24, image: "chillguy.webp", text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?" }
+  ];
+
+        // Rest of the script remains the same as in the original file
+        function generateCalendar() {
+            const container = document.getElementById('calendar-container');
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const christmasYear = currentDate.getMonth() >= 11 ? currentYear : currentYear - 1;
+            
+            let savedOrder = JSON.parse(localStorage.getItem('adventCalendarOrder'));
+            
+            if (!savedOrder) {
+                savedOrder = adventData.map(item => item.day).sort(() => Math.random() - 0.5);
+                localStorage.setItem('adventCalendarOrder', JSON.stringify(savedOrder));
+            }
+
+            const sortedData = savedOrder.map(day => 
+                adventData.find(item => item.day === day)
+            );
+
+            sortedData.forEach(item => {
+                const col = document.createElement('div');
+                col.classList.add('col-3');
+
+                const door = document.createElement('div');
+                door.classList.add('door', 'text-center', 'position-relative');
+                
+                const daySpan = document.createElement('span');
+                daySpan.classList.add('door-day');
+                daySpan.textContent = item.day;
+                door.appendChild(daySpan);
+
+                door.innerHTML += item.day;
+
+                const doorDate = new Date(christmasYear, 11, item.day);
+                if (doorDate <= currentDate) {
+                    door.classList.add('available');
+                    door.onclick = () => openDoor(item);
+                } else {
+                    door.classList.add('locked');
+                }
+
+                col.appendChild(door);
+                container.appendChild(col);
+            });
+        }
+
+        function openDoor(item) {
+            const modalImage = document.getElementById('modal-image');
+            const modalText = document.getElementById('modal-text');
+
+            modalImage.src = item.image;
+            modalText.textContent = item.text;
+            
+            const doorModal = new bootstrap.Modal(document.getElementById('doorModal'));
+            doorModal.show();
+        }
+
+        window.onload = generateCalendar;
+    </script>
+</body>
+</html>
