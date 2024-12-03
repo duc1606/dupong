@@ -130,9 +130,31 @@
                     }
                 ]
             },
+            { 
+                day: 3, 
+                image: "3.jpg", 
+                text: "Die Fragen müssen jetzt ein bisschen schwer werden. Krass wenn du das beantworten kannst. Welche ist meine Lieblingsfruch?   ",
+                answers: [
+                    { 
+                        text: "Himbeeren", 
+                        correct: true,
+                        responseText: "Richtig Motherfucker"
+                    },
+                    { 
+                        text: "Mandarinen", 
+                        correct: false,
+                        responseText: "Platz 2"
+                    },
+                    { 
+                        text: "Blaubeeren", 
+                        correct: false,
+                        responseText: "Dachtest du wohl...."
+                    }
+                ]
+            },
             // Rest of the days remain the same
-            ...Array.from({length: 22}, (_, i) => ({
-                day: i + 3, 
+            ...Array.from({length: 21}, (_, i) => ({
+                day: i + 4, 
                 image: "chillguy.webp", 
                 text: "Der Tag ist noch nicht da, was suchst du hier du Schummler?"
             }))
